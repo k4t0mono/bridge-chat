@@ -88,11 +88,43 @@ class ServerTest(unittest.TestCase):
             'X-Auth-Token': r0.json()['token']
         }
 
-        body = { 'ip': '192.168.0.4', 'port': 53123 }
+        body = { 'ip': '192.168.0.4', 'port': 53123, 'op': 1 }
 
         r1 = s.post('{}/broadcast'.format(BASE_URL), headers=headers, json=body)
 
         self.assertEqual(r1.status_code, 200)
+
+    def test_getOnline_noAuth_unauthorized(self):
+        s = get_session()
+
+        r1 = s.get('{}/online'.format(BASE_URL))
+
+        self.assertEqual(r1.status_code, 401)
+
+    def test_getOnline_invalidAuth_unauthorized(self):
+        s = get_session()
+        r0 = s.post('{}/user'.format(BASE_URL), auth=('user1', 'pass'))
+
+        headers = {
+            'X-Auth-Login': 'user1',
+            'X-Auth-Token': 'asd'
+        }
+        r1 = s.get('{}/online'.format(BASE_URL), headers=headers)
+
+        self.assertEqual(r1.status_code, 401)
+
+    def test_getOnline_validAuth_ok(self):
+        s = get_session()
+        r0 = s.post('{}/user'.format(BASE_URL), auth=('user1', 'pass'))
+
+        headers = {
+            'X-Auth-Login': 'user1',
+            'X-Auth-Token': r0.json()['token']
+        }
+        r1 = s.get('{}/online'.format(BASE_URL), headers=headers)
+
+        self.assertEqual(r1.status_code, 200)
+
 
 
 
