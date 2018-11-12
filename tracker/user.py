@@ -19,21 +19,6 @@ class User():
 
         return t
     
-    def auth(self, t):
-        l = [x for x in self.tokens if x == t]
-        if  len(l) == 0:
-            return False
-
-        try:
-            r = jwt.decode(t, os.environ['BRIGECHAT_SECRET'], algorithms=['HS512'])
-        except jwt.exceptions.InvalidSignatureError:
-            return False
-
-        if r['login'] != self.login:
-            return False
-        
-        return True
-
     def __repr__(self):
         s = '<User login=\'{}\' tokens={}>'.format(self.login, len(self.tokens))
         return s

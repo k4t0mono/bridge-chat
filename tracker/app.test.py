@@ -35,7 +35,7 @@ class ServerTest(unittest.TestCase):
 
         t = jwt.decode(
                 r.json()['token'],
-                os.environ['BRIGECHAT_SECRET'],
+                os.environ['BRIDGECHAT_SECRET'],
                 algorithms=['HS512']
         )
         self.assertEqual(t['login'], 'user0')
@@ -60,8 +60,7 @@ class ServerTest(unittest.TestCase):
         r0 = s.post('{}/user'.format(BASE_URL), auth=('user1', 'pass'))
 
         headers = {
-            'X-Auth-Login': 'user',
-            'X-Auth-Token': r0.json()['token']
+            'X-Auth-Token': ''
         }
         r1 = s.post('{}/broadcast'.format(BASE_URL), headers=headers)
 
@@ -124,8 +123,6 @@ class ServerTest(unittest.TestCase):
         r1 = s.get('{}/online'.format(BASE_URL), headers=headers)
 
         self.assertEqual(r1.status_code, 200)
-
-
 
 
 if __name__ == '__main__':

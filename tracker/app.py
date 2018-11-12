@@ -3,6 +3,7 @@ from base64 import b64decode
 from invalid_usage import InvalidUsage
 from user import User
 from pprint import pprint
+import jwt
 import os
 import json
 
@@ -29,6 +30,19 @@ def inspect_users():
         print('\t</User>')
 
     print(']')
+
+def auth(t):
+    try:
+        r = jwt.decode(t, os.environ['BRIDGECHAT_SECRET'], algorithms=['HS512'])
+    except (jwt.exceptions.DecodeError, jwt.exceptions.InvalidSignatureError):
+        return (False, None)
+
+    l = [u for u in users if u.login == r['login']]
+    if len(l) and t in l[0].tokens:
+        return (True, l[0].login)
+
+    return (False, None)
+        
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
@@ -65,13 +79,12 @@ def new_user():
 @app.route('/broadcast', methods=['POST'])
 def broadcast():
     try:
-        login = request.headers['X-Auth-Login']
         token = request.headers['X-Auth-Token']
     except KeyError:
         raise InvalidUsage('Invalid auth', status_code=401)
 
-    l = [u for u in users if u.login == login]
-    if len(l) == 0 or not l[0].auth(token):
+    (res, login) = auth(token)
+    if not res:
         raise InvalidUsage('Invalid auth', status_code=401)
 
     try:
@@ -94,14 +107,12 @@ def broadcast():
 @app.route('/online')
 def get_online():
     try:
-        login = request.headers['X-Auth-Login']
         token = request.headers['X-Auth-Token']
     except KeyError:
         raise InvalidUsage('Invalid auth', status_code=401)
-
-    l = [u for u in users if u.login == login]
-    print(l)
-    if len(l) == 0 or not l[0].auth(token):
+    
+    (res, login) = auth(token)
+    if not res:
         raise InvalidUsage('Invalid auth', status_code=401)
 
     res = jsonify(online)
