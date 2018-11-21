@@ -7,17 +7,17 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ChatServer extends Thread {
+public class ChatClient extends Thread {
     
     private final Socket socket;
 
-    public ChatServer(Socket s) {
+    public ChatClient(Socket s) {
         this.socket = s;
     }
     
     @Override
     public void run() {
-        System.out.println("New ChatServer Started");
+        System.out.println("New ChatClient Started");
         
         try {
             PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
@@ -27,22 +27,15 @@ public class ChatServer extends Thread {
             Scanner scan = new Scanner(System.in);
             
             String input_line;
-            while((input_line = in.readLine()) != null) {
+            while((input_line = scan.nextLine()) != null) {
                 if(input_line.equals("."))
                     break;
                 
-                System.out.println(input_line);
-                String res;
-                res = scan.nextLine();
-                
-                long time = System.currentTimeMillis();
-                Message msg;
-                msg = new Message("test", "asdasd", time, res);
-                out.println(node.Node.gson.toJson(msg));
+                System.out.println(in.readLine());
             }
            
             scan.close();
-            in.close();
+//            in.close();
             out.close();
             this.socket.close();
             
