@@ -1,11 +1,13 @@
 package node;
 
-import Chat.ChatServer;
+import Chat.Chat;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Node {
 
@@ -13,28 +15,11 @@ public class Node {
     public static Gson gson = new GsonBuilder().create();
     
     public static void main(String[] args) {
-        System.out.println("0 - test chat server");
-        System.out.println("1 - test chat client");
-        
-        Scanner scan = new Scanner(System.in);
-        int op = scan.nextInt();
-
         try {
-            switch(op) {
-            case 0:
-                chat_server();
-                break;
-            
-            case 1:
-                chat_client();
-                break;
-            }
-        } catch(IOException e) {
-            System.err.println("Error: " + e.getMessage());
-            System.exit(1);
+            chat_server();
+        } catch (IOException ex) {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        scan.close();
     }
     
     private static void chat_server() throws IOException {
@@ -43,8 +28,8 @@ public class Node {
         ss = new ServerSocket(PORT);
         
         while(true) {
-            ChatServer cs;
-            cs = new ChatServer(ss.accept());
+            Chat cs;
+            cs = new Chat(ss.accept());
             cs.start();
         }
     }
