@@ -1,26 +1,30 @@
 package Chat;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class SocketWriter extends Thread {
     
-    private final Chat parent;
+    private final PrintWriter out;
     
-    public SocketWriter(Chat parent) {
+    public SocketWriter(PrintWriter out) {
         super();
         
-        this.parent = parent;
+        this.out = out;
     }
     
     @Override
     public void run() {
-//        try {
-//            
-//        } catch (IOException ex) {
-//            Logger.getLogger(SocketReader.class.getName()).log(Level.SEVERE, null, ex);    
-//        }
+        Scanner scan = new Scanner(System.in);
+        
+        String s;
+        while(!this.out.checkError()) {
+            s = scan.nextLine();
+            this.out.println(s);
+        }
+        
+        System.out.println("dead");
+        scan.close();
     }
     
 }

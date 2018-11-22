@@ -27,8 +27,14 @@ public class Chat extends Thread {
             );
             
             SocketReader sr = new SocketReader(in);
+            SocketWriter sw = new SocketWriter(out);
+            
             sr.start();
+            sw.start();
+            
             sr.join();
+            sw.interrupt();
+//            sw.join();
             
             in.close();
             out.close();

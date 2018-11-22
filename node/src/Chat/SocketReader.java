@@ -20,7 +20,7 @@ public class SocketReader extends Thread {
         try {
             String s = in.readLine();
             while(s != null) {
-                System.out.println(s);
+                System.out.println("> " + s);
                 
                 s = in.readLine();
             }
