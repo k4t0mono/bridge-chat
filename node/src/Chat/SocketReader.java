@@ -7,36 +7,28 @@ import java.util.logging.Logger;
 
 public class SocketReader extends Thread {
 
-    private final Chat parent;
+    private final BufferedReader in;
     
-    public SocketReader(Chat parent) {
+    public SocketReader(BufferedReader in) {
         super();
         
-        this.parent = parent;
+        this.in = in;
     }
     
     @Override
     public void run() {
         try {
-            String s = parent.getIn().readLine();
+            String s = in.readLine();
             while(s != null) {
                 System.out.println(s);
                 
-                s = parent.getIn().readLine();
+                s = in.readLine();
             }
-        } catch (IOException ex) {
-            Logger.getLogger(SocketReader.class.getName()).log(Level.SEVERE, null, ex);    
-        }
-        
-        try {
-            this.parent.getSocket().close();
         } catch (IOException ex) {
             Logger.getLogger(SocketReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(parent.getSocket().isInputShutdown());
-        System.out.println(parent.getSocket().isOutputShutdown());
-        System.out.println("morri x.x");
-        this.parent.stop();
+        
+        Logger.getLogger(SocketReader.class.getName()).log(Level.FINER, "SocketReader ended");
     }
     
 }

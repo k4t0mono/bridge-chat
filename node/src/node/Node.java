@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,10 +31,6 @@ public class Node {
             cs = new Chat(ss.accept());
             cs.start();
         }
-    }
-    
-    private static void chat_client() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
