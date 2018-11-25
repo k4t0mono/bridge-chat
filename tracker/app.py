@@ -59,8 +59,7 @@ def home():
 @app.route('/user', methods=['POST'])
 def new_user():
     try:
-        data = request.headers['Authorization'].split()
-        (login, passw) = b64decode(data[1]).decode('utf-8').split(':')
+        login = request.headers['X-Auth-Login']
     except KeyError:
         raise InvalidUsage('Invalid data', status_code=400)
 
@@ -68,7 +67,7 @@ def new_user():
     if len(l):
         raise InvalidUsage('User alredy exists', status_code=401)
 
-    u = User(login, passw)
+    u = User(login)
     t = u.gen_token()
     users.append(u)
 
@@ -99,8 +98,8 @@ def broadcast():
         online[login] = (ip, port)
     elif op == 0:
         online.remove(login)
-    pprint(online)
 
+    pprint(online)
     res = jsonify(success=True)
     return res
 
@@ -120,4 +119,4 @@ def get_online():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, ssl_context=('./certf/cert.pem', './certf/key.pem'))
+    app.run(host='0.0.0.0', debug=True, ssl_context=('./certf/cert.pem', './certf/key.pem'))

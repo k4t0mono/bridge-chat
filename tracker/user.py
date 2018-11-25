@@ -4,9 +4,8 @@ import os
 
 class User():
 
-    def __init__(self, login, passw):
+    def __init__(self, login):
             self.login = login
-            self.passw = passw
             self.tokens = []
 
     def gen_token(self):
