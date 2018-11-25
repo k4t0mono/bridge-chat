@@ -42,7 +42,7 @@ def auth(t):
         return (True, l[0].login)
 
     return (False, None)
-        
+
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
@@ -93,7 +93,7 @@ def broadcast():
         op = data['op']
     except (json.decoder.JSONDecodeError, KeyError):
         raise InvalidUsage('Invalid body', status_code=400)
-    
+
     if op == 1:
         online[login] = (ip, port)
     elif op == 0:
@@ -109,12 +109,20 @@ def get_online():
         token = request.headers['X-Auth-Token']
     except KeyError:
         raise InvalidUsage('Invalid auth', status_code=401)
-    
+
     (res, login) = auth(token)
     if not res:
         raise InvalidUsage('Invalid auth', status_code=401)
 
-    res = jsonify(online)
+    l = []
+    for k in online:
+        l.append({
+            'login': k,
+            'ip': online[k][0],
+            'port': online[k][1],
+        })
+
+    res = jsonify(l)
     return res
 
 

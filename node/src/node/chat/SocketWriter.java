@@ -1,4 +1,4 @@
-package Chat;
+package node.chat;
 
 import java.io.PrintWriter;
 import java.util.Scanner;

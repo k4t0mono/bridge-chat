@@ -1,4 +1,4 @@
-package Chat;
+package node.chat;
 
 public class Message {
     
