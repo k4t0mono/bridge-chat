@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.validation.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bridgechat.controller.ChatSceneController">
+    <stylesheets>
+        <URL value="@chatScene.css" />
+    </stylesheets>
+   <children>
+      <JFXToolbar prefHeight="179.0" prefWidth="209.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <AnchorPane prefHeight="25.0" prefWidth="547.0" BorderPane.alignment="CENTER">
+               <children>
+                  <JFXTextField fx:id="txtFMsg" layoutX="14.0" layoutY="175.0" prefHeight="25.0" prefWidth="447.0" promptText="Menssagem" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="10.0" />
+                  <JFXButton fx:id="btnSendMsg" layoutX="467.0" layoutY="8.0" onMouseClicked="#sendOnClick" prefHeight="25.0" prefWidth="75.0" text="Enviar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+         </bottom>
+         <center>
+            <JFXTextArea fx:id="txtArea" BorderPane.alignment="CENTER" />
+         </center>
+      </JFXToolbar>
+   </children>
+</AnchorPane>
