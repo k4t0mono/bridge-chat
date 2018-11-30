@@ -37,19 +37,19 @@ public class SceneManager {
 //        secondaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/eventapp/recursos/eta_icon200.png")));
         
         //Setando p/ que ao fechar o pai, iremos finalizar o filho(father = primary, sun = secondary)
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                boolean confirm = SceneManager.getInstance().alertMsg("Confirmação",
-                                                      "Deseja fechar o BridgeChat?",
-                                    "Clique em cancelar para continuar no sistema");
-                if(confirm){
-                    secondaryStage.close();
-                } else {
-                    event.consume();
-                }
-            }               
-        });
+//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//            @Override
+//            public void handle(WindowEvent event) {
+//                boolean confirm = SceneManager.getInstance().alertMsg("Confirmação",
+//                                                      "Deseja fechar o BridgeChat?",
+//                                    "Clique em cancelar para continuar no sistema");
+//                if(confirm){
+//                    secondaryStage.close();
+//                } else {
+//                    event.consume();
+//                }
+//            }               
+//        });
         
         secondaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

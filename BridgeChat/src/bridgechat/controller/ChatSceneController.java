@@ -5,6 +5,7 @@
  */
 package bridgechat.controller;
 
+import bridgechat.dao.MessageDAO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
@@ -14,7 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import bridgechat.util.SceneManager;
 
-public class ChatSceneController implements Initializable {
+public class ChatSceneController implements Initializable  {
 
     int indexTxtArea = 0;
     
@@ -25,13 +26,17 @@ public class ChatSceneController implements Initializable {
     private JFXTextArea msgArea;
     @FXML
     private JFXTextArea txtArea;
+    private MessageDAO dao;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.dao = MessageDAO.getInstace();
+        new AcessDAO(this).start();
     }    
     
     public void sendOnClick(){
         if (!msgArea.getText().isEmpty()){
+            dao.addSendedMessage(msgArea.getText());
             insertTextArea(msgArea.getText());
             msgArea.clear();
         }
