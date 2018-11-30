@@ -14,35 +14,30 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import bridgechat.util.SceneManager;
 
-/**
- * FXML Controller class
- *
- * @author Gabriel
- */
 public class ChatSceneController implements Initializable {
 
     int indexTxtArea = 0;
     
+//    @FXML
+//    private JFXTextField txtFMsg;
+    
     @FXML
-    private JFXButton btnSendMsg;
-    @FXML
-    private JFXTextField txtFMsg;
+    private JFXTextArea msgArea;
     @FXML
     private JFXTextArea txtArea;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }    
     
     public void sendOnClick(){
-        insertTextArea(txtFMsg.getText());
-        txtFMsg.clear();
+        if (!msgArea.getText().isEmpty()){
+            insertTextArea(msgArea.getText());
+            msgArea.clear();
+        }
     }
     
     public void insertTextArea(String msg){
         txtArea.appendText("FULANO: " + msg + '\n');
     }
-    
-    
 }

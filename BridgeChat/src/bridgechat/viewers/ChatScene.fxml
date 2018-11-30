@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.paint.*?>
 <?import com.jfoenix.validation.*?>
 <?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
@@ -9,22 +11,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bridgechat.controller.ChatSceneController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bridgechat.controller.ChatSceneController">
     <stylesheets>
         <URL value="@chatScene.css" />
     </stylesheets>
    <children>
       <JFXToolbar prefHeight="179.0" prefWidth="209.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
-            <AnchorPane prefHeight="25.0" prefWidth="547.0" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="32.0" prefWidth="600.0" style="-fx-background-color: #ededed;" BorderPane.alignment="CENTER">
                <children>
-                  <JFXTextField fx:id="txtFMsg" layoutX="14.0" layoutY="175.0" prefHeight="25.0" prefWidth="447.0" promptText="Menssagem" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="10.0" />
-                  <JFXButton fx:id="btnSendMsg" layoutX="467.0" layoutY="8.0" onMouseClicked="#sendOnClick" prefHeight="25.0" prefWidth="75.0" text="Enviar" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <JFXButton fx:id="btnSendMsg" buttonType="RAISED" layoutX="517.0" layoutY="2.0" maxHeight="25.0" maxWidth="75.0" minHeight="25.0" minWidth="75.0" onMouseClicked="#sendOnClick" prefHeight="25.0" prefWidth="75.0" ripplerFill="#03ae03f2" style="-fx-background-color: #00cc00; -fx-background-radius: 5;" text="Enviar" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></JFXButton>
+                  <JFXTextArea fx:id="msgArea" focusColor="WHITE" maxHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" promptText="Menssagem" style="-fx-background-color: white; -fx-padding: 5; -fx-background-radius: 15;" unFocusColor="#a19f9f00" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
          </bottom>
          <center>
-            <JFXTextArea fx:id="txtArea" BorderPane.alignment="CENTER" />
+            <JFXTextArea fx:id="txtArea" editable="false" focusColor="#a6a6a600" focusTraversable="false" mouseTransparent="true" unFocusColor="#a19f9f15" wrapText="true" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding></JFXTextArea>
          </center>
       </JFXToolbar>
    </children>
