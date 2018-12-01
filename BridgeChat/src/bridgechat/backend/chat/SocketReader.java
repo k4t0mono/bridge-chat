@@ -18,12 +18,11 @@ public class SocketReader extends Thread {
     
     @Override
     public void run() {
+        MessageDAO dao = MessageDAO.getInstace();
         try {
             String s = in.readLine();
             while(s != null) {
-//                System.out.println("> " + s);
-                MessageDAO.getInstace().addRecivedMessage(s);
-                
+                dao.addRecivedMessage(s);
                 s = in.readLine();
             }
         } catch (IOException ex) {

@@ -1,5 +1,6 @@
 package bridgechat.backend.chat;
 
+import bridgechat.dao.MessageDAO;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,14 +28,10 @@ public class Chat extends Thread {
             );
             
             SocketReader sr = new SocketReader(in);
-            SocketWriter sw = new SocketWriter(out);
+            MessageDAO.getInstace().setOutSocket(out);
             
             sr.start();
-            sw.start();
-            
             sr.join();
-//            sw.interrupt();
-            sw.join();
             
             in.close();
             out.close();

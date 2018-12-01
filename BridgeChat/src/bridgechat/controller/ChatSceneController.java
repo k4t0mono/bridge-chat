@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import bridgechat.util.SceneManager;
 
 public class ChatSceneController implements Initializable  {
 
@@ -31,7 +30,7 @@ public class ChatSceneController implements Initializable  {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.dao = MessageDAO.getInstace();
-        new AcessDAO(this).start();
+        dao.setChatScene(this);
     }    
     
     public void sendOnClick(){
