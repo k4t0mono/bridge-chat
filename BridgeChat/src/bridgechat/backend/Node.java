@@ -34,16 +34,20 @@ public class Node extends Thread {
     private static final String TRACKER_ADDR = "https://127.0.0.1:5000";
     private static String token;
     
-    public static final Gson GSON = new GsonBuilder().create();
+    private static final Gson GSON = new GsonBuilder().create();
+    private static String username;
+
+    public static String getUsername() {
+        return username;
+    }
     
     @Override
     public void run() {
 //        setup_ssl();
 //        
-//        Scanner scan = new Scanner(System.in);
-//        
-//        System.out.print("username: ");
-//        String username = scan.nextLine();
+        Scanner scan = new Scanner(System.in);
+        System.out.print("username: ");
+        username = scan.nextLine();
 //        
 //        OnlineUser[] onlines = {};
 //        try {

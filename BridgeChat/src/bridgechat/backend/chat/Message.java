@@ -6,7 +6,7 @@ public class Message {
     private final String reciver;
     private final long time;
     private final String text;
-
+    
     public Message(String sender, String reciver, long time, String text) {
         this.sender = sender;
         this.reciver = reciver;
@@ -14,6 +14,15 @@ public class Message {
         this.text = text;
     }
 
+    public boolean isValid() {
+        boolean senderIsValid = ((sender != null) && (!sender.isEmpty()));
+        boolean reciverIsValid = ((reciver != null) && (!reciver.isEmpty()));
+        boolean textIsValid = ((text != null) && (!text.isEmpty()));
+        boolean timeIsValid = time >= 0;
+        
+        return senderIsValid && reciverIsValid && textIsValid && timeIsValid;
+    }
+    
     public String getSender() {
         return sender;
     }

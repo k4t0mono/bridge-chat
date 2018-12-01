@@ -26,9 +26,10 @@ public class Chat extends Thread {
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(this.socket.getInputStream())
             );
-            
+            MessageDAO dao = MessageDAO.getInstace();
             SocketReader sr = new SocketReader(in);
-            MessageDAO.getInstace().setOutSocket(out);
+            dao.setOutSocket(out);
+            dao.setChatUsername(in.readLine());
             
             sr.start();
             sr.join();

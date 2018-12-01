@@ -5,6 +5,8 @@
  */
 package bridgechat.controller;
 
+import bridgechat.backend.Node;
+import bridgechat.backend.chat.Message;
 import bridgechat.dao.MessageDAO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -35,13 +37,17 @@ public class ChatSceneController implements Initializable  {
     
     public void sendOnClick(){
         if (!msgArea.getText().isEmpty()){
-            dao.addSendedMessage(msgArea.getText());
-            insertTextArea(msgArea.getText());
+            dao.addSended(msgArea.getText());
+            insertTextArea(Node.getUsername() + ": " + msgArea.getText());
             msgArea.clear();
         }
     }
     
-    public void insertTextArea(String msg){
-        txtArea.appendText("FULANO: " + msg + '\n');
+    public void insertTextArea(String txt) {
+        txtArea.appendText(txt + "\n\n");
+    }
+    
+    public void insertMessage(Message msg) {
+        insertTextArea(msg.getSender() + ": " + msg.getText());
     }
 }
