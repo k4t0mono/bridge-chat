@@ -5,6 +5,9 @@
  */
 package bridgechat.controller;
 
+import bridgechat.backend.Node;
+import bridgechat.backend.chat.Message;
+import bridgechat.dao.MessageDAO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
@@ -12,37 +15,39 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import bridgechat.util.SceneManager;
 
-/**
- * FXML Controller class
- *
- * @author Gabriel
- */
-public class ChatSceneController implements Initializable {
+public class ChatSceneController implements Initializable  {
 
     int indexTxtArea = 0;
     
+//    @FXML
+//    private JFXTextField txtFMsg;
+    
     @FXML
-    private JFXButton btnSendMsg;
-    @FXML
-    private JFXTextField txtFMsg;
+    private JFXTextArea msgArea;
     @FXML
     private JFXTextArea txtArea;
+    private MessageDAO dao;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        this.dao = MessageDAO.getInstace();
+        dao.setChatScene(this);
     }    
     
     public void sendOnClick(){
-        insertTextArea(txtFMsg.getText());
-        txtFMsg.clear();
+        if (!msgArea.getText().isEmpty()){
+            dao.addSended(msgArea.getText());
+            insertTextArea(Node.getUsername() + ": " + msgArea.getText());
+            msgArea.clear();
+        }
     }
     
-    public void insertTextArea(String msg){
-        txtArea.appendText("FULANO: " + msg + '\n');
+    public void insertTextArea(String txt) {
+        txtArea.appendText(txt + "\n\n");
     }
     
-    
+    public void insertMessage(Message msg) {
+        insertTextArea(msg.getSender() + ": " + msg.getText());
+    }
 }

@@ -5,6 +5,7 @@
  */
 package bridgechat;
 
+import bridgechat.backend.Node;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -19,6 +20,8 @@ public class BridgeChat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
+        new Node().start();
+        
         Scene cena = SceneManager.getInstance().loadScene("ChatScene");
         
         if (cena != null) {
