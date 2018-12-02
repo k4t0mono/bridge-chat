@@ -6,11 +6,16 @@
 package bridgechat;
 
 import bridgechat.backend.Node;
+import bridgechat.backend.chat.Chat;
+import bridgechat.backend.chat.Message;
+import bridgechat.dao.MessageDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import bridgechat.util.SceneManager;
+import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
@@ -20,14 +25,35 @@ public class BridgeChat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        new Node().start();
+//        Scanner scan = new Scanner(System.in);
+//        System.out.print("Username: ");
+//        String username = scan.nextLine();
+//        
+//        int op = scan.nextInt();
+//        
+//        if(op == 1) {
+//            String addr = "localhost";
+//            
+//            System.out.print("Nick: ");
+//            scan.nextLine();
+//            MessageDAO.getInstace().setChatUsername(scan.nextLine());
+//
+//            System.out.print("Port: ");
+//            int port = scan.nextInt();
+//
+//            Socket s = new Socket(addr, port);
+//            Chat cs = new Chat(s, username);
+//            cs.start();
+//        }
+        Node node = new Node();
+        node.start();
         
-        Scene cena = SceneManager.getInstance().loadScene("ChatScene");
-        
+        Scene cena = SceneManager.getInstance().loadScene("LoginScene");
+
         if (cena != null) {
             SceneManager.getInstance().getPrimaryStage().centerOnScreen();
-            //SceneManager.getInstance().getPrimaryStage().setMinWidth(670.0);;
-//            SceneManager.getInstance().getPrimaryStage().setMaxWidth(670.0);
+            
+            SceneManager.getInstance().getPrimaryStage().setResizable(false);
             SceneManager.getInstance().setPrimaryScene(cena);
         }
     }

@@ -28,13 +28,13 @@ public class SceneManager {
     public SceneManager(){
         primaryStage = new Stage();
         //primaryStage.setResizable(false);
-        primaryStage.centerOnScreen();              
-//        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/eventapp/recursos/eta_icon200.png")));
-        
+         ;              
+        primaryStage.getIcons().add(new Image(this.getClass().getResource("/bridgechat/resources/bridgeChat64.png").toString()));
+
         secondaryStage = new Stage();
         //secondaryStage.setResizable(false);
         secondaryStage.centerOnScreen();   
-//        secondaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/eventapp/recursos/eta_icon200.png")));
+        secondaryStage.getIcons().add(new Image(this.getClass().getResource("/bridgechat/resources/bridgeChat64.png").toString()));
         
         //Setando p/ que ao fechar o pai, iremos finalizar o filho(father = primary, sun = secondary)
 //        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -51,6 +51,8 @@ public class SceneManager {
 //            }               
 //        });
         
+        
+
         secondaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -130,7 +132,7 @@ public class SceneManager {
         
         //Pegando o stage da tela
         Stage stage = (Stage) info.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image(this.getClass().getResource("/eventapp/recursos/eta_icon64.png").toString()));
+        stage.getIcons().add(new Image(this.getClass().getResource("/bridgechat/resources/bridgeChat64.png").toString()));
                                                                  
         info.showAndWait();
     }
@@ -143,7 +145,7 @@ public class SceneManager {
         
         //Pegando o stage da tela & setando um icone a tela
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        //stage.getIcons().add(new Image(this.getClass().getResource("/eventapp/recursos/eta_icon64.png").toString()));
+        stage.getIcons().add(new Image(this.getClass().getResource("/bridgechat/resources/bridgeChat64.png").toString()));
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){

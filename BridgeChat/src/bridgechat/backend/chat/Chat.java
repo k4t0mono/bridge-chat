@@ -1,5 +1,6 @@
 package bridgechat.backend.chat;
 
+import bridgechat.backend.Node;
 import bridgechat.dao.MessageDAO;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +13,15 @@ import java.util.logging.Logger;
 public class Chat extends Thread {
     
     private final Socket socket;
+    private final String username;
 
-    public Chat(Socket s) {
+    public Chat(Socket s, String username) {
         this.socket = s;
+        this.username = username;
+    }
+    
+    public Chat(Socket s) {
+        this(s, null);
     }
     
     @Override
@@ -26,11 +33,20 @@ public class Chat extends Thread {
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(this.socket.getInputStream())
             );
-            MessageDAO dao = MessageDAO.getInstace();
-            SocketReader sr = new SocketReader(in);
-            dao.setOutSocket(out);
-            dao.setChatUsername(in.readLine());
             
+            MessageDAO dao = MessageDAO.getInstace();
+            dao.setOutSocket(out);
+            
+            if(username != null) {
+                out.println(username);
+                System.out.println("Username sended");
+            } else {
+                String s = in.readLine();
+                dao.setChatUsername(s);
+                System.out.println("Got username: " + s);
+            }
+            
+            SocketReader sr = new SocketReader(in);
             sr.start();
             sr.join();
             

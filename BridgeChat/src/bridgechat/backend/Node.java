@@ -35,19 +35,14 @@ public class Node extends Thread {
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
-    private static String username;
-
-    public static String getUsername() {
-        return username;
-    }
     
     @Override
     public void run() {
 //        setup_ssl();
 //        
-        Scanner scan = new Scanner(System.in);
-        System.out.print("username: ");
-        username = scan.nextLine();
+//        Scanner scan = new Scanner(System.in);
+//        System.out.print("username: ");
+//        username = scan.nextLine();
 //        
 //        OnlineUser[] onlines = {};
 //        try {
