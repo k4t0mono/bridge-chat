@@ -27,6 +27,7 @@ public class LoginController implements Initializable {
     public void logar(){
         dao.setUsername(txtLogin.getText());
         dao.setPassword(txtPass.getText());
+        bridgechat.BridgeChat.startNode();
                 
         Scene cena2 = SceneManager.getInstance().loadScene("ChatScene");
         SceneManager.getInstance().setPrimaryScene(cena2);

@@ -37,9 +37,10 @@ public class SceneManager {
         secondaryStage.getIcons().add(new Image(this.getClass().getResource("/bridgechat/resources/bridgeChat64.png").toString()));
         
         //Setando p/ que ao fechar o pai, iremos finalizar o filho(father = primary, sun = secondary)
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//            @Override
-//            public void handle(WindowEvent event) {
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                bridgechat.BridgeChat.closeNode();
 //                boolean confirm = SceneManager.getInstance().alertMsg("Confirmação",
 //                                                      "Deseja fechar o BridgeChat?",
 //                                    "Clique em cancelar para continuar no sistema");
@@ -48,8 +49,8 @@ public class SceneManager {
 //                } else {
 //                    event.consume();
 //                }
-//            }               
-//        });
+            }               
+        });
         
         
 

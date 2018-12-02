@@ -8,12 +8,14 @@ package bridgechat.controller;
 import bridgechat.backend.Node;
 import bridgechat.backend.chat.Message;
 import bridgechat.dao.MessageDAO;
+import bridgechat.dao.OnlineUserDAO;
 import bridgechat.dao.UserDAO;
 import bridgechat.util.SceneManager;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,8 +33,6 @@ import javafx.scene.layout.AnchorPane;
 public class ChatSceneController implements Initializable  {
 
     int indexTxtArea = 0;
-    
-    private MessageDAO dao;
     
     @FXML
     private JFXTextArea msgArea;
@@ -59,6 +59,7 @@ public class ChatSceneController implements Initializable  {
     
     private MessageDAO messageDAO;
     private UserDAO userDAO;
+    private OnlineUserDAO onlineUserDAO;
         
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -67,12 +68,14 @@ public class ChatSceneController implements Initializable  {
         this.messageDAO = MessageDAO.getInstace();
         this.userDAO = UserDAO.getInstance();
         messageDAO.setChatScene(this);
+        this.onlineUserDAO = OnlineUserDAO.getInstance();
+        onlineUserDAO.setChatSceneController(this);
         
         splitPaneCenter.setDividerPositions(0.25);
         
         // modelo tabeela
-        tableName.setCellValueFactory(new PropertyValueFactory<Person, String>("name"));
-        tableAmountMsg.setCellValueFactory(new PropertyValueFactory<Person, Integer>("amountMsg"));
+        tableName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tableAmountMsg.setCellValueFactory(new PropertyValueFactory<>("amountMsg"));
     }    
     
     public void insertTextArea(String txt) {
@@ -83,8 +86,13 @@ public class ChatSceneController implements Initializable  {
         insertTextArea(msg.getSender() + ": " + msg.getText());
     }
     
-    private void adcTableValue(ArrayList<Person> list){
-        dateTable = FXCollections.observableArrayList(list);
+    public void adcTableValue(List<String> list){
+        ArrayList<Person> people = new ArrayList<>();
+        list.forEach((username) -> {
+            people.add(new Person(username, 0));
+        });
+        
+        dateTable = FXCollections.observableArrayList(people);
         tvUsers.setItems(dateTable);
     }
     

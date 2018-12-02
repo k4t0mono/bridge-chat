@@ -22,6 +22,8 @@ import java.util.Scanner;
  * @author Gabriel
  */
 public class BridgeChat extends Application {
+
+    private static Node node;
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -45,8 +47,8 @@ public class BridgeChat extends Application {
 //            Chat cs = new Chat(s, username);
 //            cs.start();
 //        }
-        Node node = new Node();
-        node.start();
+        node = new Node();
+//        node.start();
         
         Scene cena = SceneManager.getInstance().loadScene("LoginScene");
 
@@ -58,6 +60,14 @@ public class BridgeChat extends Application {
         }
     }
 
+    public static void startNode() {
+        node.start();
+    }
+    
+    public static void closeNode() {
+        node.interrupt();
+    }
+    
     /**
      * @param args the command line arguments
      */

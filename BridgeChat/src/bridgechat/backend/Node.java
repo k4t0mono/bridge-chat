@@ -4,6 +4,8 @@ import bridgechat.backend.chat.Chat;
 import bridgechat.backend.tracker.BroadcastMessage;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.backend.tracker.Token;
+import bridgechat.dao.OnlineUserDAO;
+import bridgechat.dao.UserDAO;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -38,24 +40,17 @@ public class Node extends Thread {
     
     @Override
     public void run() {
-//        setup_ssl();
-//        
-//        Scanner scan = new Scanner(System.in);
-//        System.out.print("username: ");
-//        username = scan.nextLine();
-//        
-//        OnlineUser[] onlines = {};
-//        try {
-//            register_user(username);
-//            broadcast_ip();
-//            onlines = get_onlines();
-//        } catch (java.net.ConnectException e) {
-//            LOGGER.severe("Can't reach the tracker");
-//        } catch (IOException ex) {
-//            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        System.out.println(Arrays.toString(onlines));
+        setup_ssl();
+
+        try {
+            register_user(UserDAO.getInstance().getUsername());
+            broadcast_ip();
+            OnlineUserDAO.getInstance().setUsers(getOnlines());
+        } catch (java.net.ConnectException e) {
+            LOGGER.severe("Can't reach the tracker");
+        } catch (IOException ex) {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         while (true) {
             try {
@@ -155,7 +150,7 @@ public class Node extends Thread {
         System.out.println(con.getResponseCode());
     }
     
-    private static OnlineUser[] get_onlines() throws IOException {
+    private static OnlineUser[] getOnlines() throws IOException {
         URL url = new URL(String.format(
                 "%s/online",
                 TRACKER_ADDR

@@ -1,6 +1,6 @@
 package bridgechat.backend.chat;
 
-import bridgechat.dao.DaoException;
+import bridgechat.dao.exception.DaoException;
 import bridgechat.dao.MessageDAO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

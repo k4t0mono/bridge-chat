@@ -1,5 +1,8 @@
 package bridgechat.dao;
 
+import bridgechat.dao.exception.InvalidReciverException;
+import bridgechat.dao.exception.DaoException;
+import bridgechat.dao.exception.InvalidMessageException;
 import bridgechat.backend.Node;
 import bridgechat.backend.chat.Message;
 import bridgechat.controller.ChatSceneController;
