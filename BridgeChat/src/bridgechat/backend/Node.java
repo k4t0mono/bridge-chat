@@ -4,6 +4,7 @@ import bridgechat.backend.chat.Chat;
 import bridgechat.backend.tracker.BroadcastMessage;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.backend.tracker.Token;
+import bridgechat.dao.MessageDAO;
 import bridgechat.dao.OnlineUserDAO;
 import bridgechat.dao.UserDAO;
 import com.google.gson.GsonBuilder;
@@ -33,7 +34,7 @@ public class Node extends Thread {
 
     private static int PORT = 50123;
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    private static final String TRACKER_ADDR = "https://127.0.0.1:5000";
+    private static final String TRACKER_ADDR = "https://192.168.0.114:5000";
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
@@ -121,6 +122,7 @@ public class Node extends Thread {
         String s = br.lines().collect(Collectors.joining());
         
         token = GSON.fromJson(s, Token.class).getToken();
+        LOGGER.info("Registerd");
     }
     
     private static void broadcast_ip() throws IOException {
@@ -148,6 +150,7 @@ public class Node extends Thread {
         }
         
         System.out.println(con.getResponseCode());
+        LOGGER.info("Broadcasted");
     }
     
     private static OnlineUser[] getOnlines() throws IOException {

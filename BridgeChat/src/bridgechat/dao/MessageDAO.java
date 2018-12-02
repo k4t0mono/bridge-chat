@@ -4,6 +4,7 @@ import bridgechat.dao.exception.InvalidReciverException;
 import bridgechat.dao.exception.DaoException;
 import bridgechat.dao.exception.InvalidMessageException;
 import bridgechat.backend.Node;
+import bridgechat.backend.chat.Chat;
 import bridgechat.backend.chat.Message;
 import bridgechat.controller.ChatSceneController;
 import com.google.gson.Gson;
@@ -11,23 +12,27 @@ import com.google.gson.GsonBuilder;
 import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MessageDAO {
     
-    private final List<Message> history;
     private ChatSceneController chatScene;
-    private PrintWriter outSocket;
-    private String chatUsername;
     private final UserDAO userDAO;
+    
+    private final Map<String, List<Message>> histories;
+    private final Map<String, Chat> chats;
+    private String activeUser;
     
     private static MessageDAO instace = null;
     private static final Gson GSON = new GsonBuilder().create();
 
     
     private MessageDAO() {
-        this.history = new ArrayList<>();
+        this.histories = new HashMap<>();
+        this.chats = new HashMap<>();
         this.userDAO = UserDAO.getInstance();
     }
     
@@ -38,15 +43,22 @@ public class MessageDAO {
         return instace;
     }
     
-    public Iterator getHistoryIterator() {
-        return history.iterator();
+    public Iterator getHistoryIterator(String login) {
+        if(histories.get(login) == null)
+            histories.put(login, new ArrayList<>());
+        
+        return histories.get(login).iterator();
     }
     
-    public void addSended(String s) {
+    public void addSended(String login, String s) {
         long timeStamp = Instant.now().getEpochSecond();
-        Message msg = new Message(userDAO.getUsername(), chatUsername, timeStamp, s);
-        history.add(msg);
-        notifyOutSocket(msg);
+        Message msg = new Message(userDAO.getUsername(), activeUser, timeStamp, s);
+        
+        if(histories.get(login) == null)
+            histories.put(login, new ArrayList<>());
+        
+        histories.get(login).add(msg);
+        notifyOutSocket(msg, login);
     }
     
     public void addRecived(Message msg) throws DaoException {
@@ -56,8 +68,16 @@ public class MessageDAO {
         if(!msg.getReciver().equals(userDAO.getUsername()))
             throw new InvalidReciverException(msg.getReciver(), userDAO.getUsername());
         
-        history.add(msg);
-        notifyChatScene(msg);
+        String login = msg.getSender();
+        if(histories.get(login) == null)
+            histories.put(login, new ArrayList<>());
+        
+        histories.get(login).add(msg);
+        
+        if(msg.getSender().equals(activeUser))
+            notifyChatScene(msg);
+        else
+            chatScene.adcValueForUser(msg.getSender());
     }
 
     public void setChatScene(ChatSceneController chatScene) {
@@ -65,21 +85,30 @@ public class MessageDAO {
     }
     
     public void notifyChatScene(Message msg) {
-        chatScene.insertMessage(msg);
-    }
-
-    public void setOutSocket(PrintWriter outSocket) {
-        this.outSocket = outSocket;
+        chatScene.addMessage(msg.getSender(), msg.getText());
     }
     
-    public void notifyOutSocket(Message msg) {
-        if(!outSocket.checkError()) {
-            outSocket.println(GSON.toJson(msg));
+    public void notifyOutSocket(Message msg, String login) {
+        chats.forEach((String key, Chat value) -> {
+            System.out.println(key + " -> " + value);
+        });
+        
+        PrintWriter out = chats.get(login).getOut();
+        if(!out.checkError()) {
+            out.println(GSON.toJson(msg));
         }
     }
 
-    public void setChatUsername(String chatUsername) {
-        this.chatUsername = chatUsername;
+    public void addChat(String login, Chat c) {
+        chats.put(login, c);
+    }
+    
+    public void setActiveUser(String activeUser) {
+        this.activeUser = activeUser;
+    }
+
+    public void addUser(String username) {
+        chatScene.adcTableValue(username, 0);
     }
     
 }

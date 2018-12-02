@@ -61,7 +61,9 @@ public class BridgeChat extends Application {
     }
 
     public static void startNode() {
+        System.out.println("asd");
         node.start();
+        System.out.println("asd");
     }
     
     public static void closeNode() {

@@ -15,8 +15,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -60,6 +62,7 @@ public class ChatSceneController implements Initializable  {
     private MessageDAO messageDAO;
     private UserDAO userDAO;
     private OnlineUserDAO onlineUserDAO;
+    private String activeUser;
         
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -70,6 +73,7 @@ public class ChatSceneController implements Initializable  {
         messageDAO.setChatScene(this);
         this.onlineUserDAO = OnlineUserDAO.getInstance();
         onlineUserDAO.setChatSceneController(this);
+        activeUser = "";
         
         splitPaneCenter.setDividerPositions(0.25);
         
@@ -77,14 +81,6 @@ public class ChatSceneController implements Initializable  {
         tableName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tableAmountMsg.setCellValueFactory(new PropertyValueFactory<>("amountMsg"));
     }    
-    
-    public void insertTextArea(String txt) {
-        txtArea.appendText(txt + "\n\n");
-    }
-    
-    public void insertMessage(Message msg) {
-        insertTextArea(msg.getSender() + ": " + msg.getText());
-    }
     
     public void adcTableValue(List<String> list){
         ArrayList<Person> people = new ArrayList<>();
@@ -96,12 +92,12 @@ public class ChatSceneController implements Initializable  {
         tvUsers.setItems(dateTable);
     }
     
-    private void adcTableValue(String name, Integer amountMsg){
+    public void adcTableValue(String name, Integer amountMsg){
         dateTable.add(new Person(name, amountMsg));
         tvUsers.setItems(dateTable);
     }
 
-    private void adcValueForUser(String name){
+    public void adcValueForUser(String name){
         ObservableList<Person> listTable = tvUsers.getItems();
         
         for (Person p : listTable){
@@ -112,7 +108,7 @@ public class ChatSceneController implements Initializable  {
         }
     }
     
-    private void adcValueForUser(String name, Integer amountMsg){
+    public void adcValueForUser(String name, Integer amountMsg){
         ObservableList<Person> listTable = tvUsers.getItems();
         
         for (Person p : listTable){
@@ -126,14 +122,31 @@ public class ChatSceneController implements Initializable  {
     @FXML
     private void clickUser(){  
         Person selected = (Person) tvUsers.getSelectionModel().getSelectedItem();
-        System.out.println(selected.getName());
+        String s = selected.getName();
+        if(s.equals(activeUser))
+            return;
+        
+        activeUser = s;
+        messageDAO.setActiveUser(activeUser);
+        
+        txtArea.clear();
+        selected.setAmountMsg(0);
+        Iterator itr = messageDAO.getHistoryIterator(activeUser);
+        while(itr.hasNext()) {
+            Message m = (Message) itr.next();
+            addMessage(m.getSender(), m.getText());
+        }
+    }
+    
+    public void addMessage(String user, String txt) {
+        txtArea.appendText(user + ": " + txt + "\n\n");
     }
     
     @FXML
     private void sendOnClick() {        
         if (!msgArea.getText().isEmpty()){
-            messageDAO.addSended(msgArea.getText());
-            insertTextArea(userDAO.getUsername() + ": " + msgArea.getText());
+            messageDAO.addSended(activeUser, msgArea.getText());
+            addMessage(userDAO.getUsername(), msgArea.getText());
             msgArea.clear();
         }
     }
@@ -167,8 +180,8 @@ public class ChatSceneController implements Initializable  {
             return amountMsg;
         }
 
-        public void setAmountMsg(int idade) {
-            this.amountMsg.set(idade);
+        public void setAmountMsg(int num) {
+            this.amountMsg.set(num);
         }
         
     }
