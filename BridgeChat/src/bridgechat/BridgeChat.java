@@ -29,7 +29,6 @@ public class BridgeChat extends Application {
         System.out.print("Username: ");
         String username = scan.nextLine();
         
-        System.out.print("OP: ");
         int op = scan.nextInt();
         
         if(op == 1) {
@@ -48,12 +47,12 @@ public class BridgeChat extends Application {
         }
         new Node(username).start();
         
-        Scene cena = SceneManager.getInstance().loadScene("ChatScene");
+        Scene cena = SceneManager.getInstance().loadScene("LoginScene");
 
         if (cena != null) {
             SceneManager.getInstance().getPrimaryStage().centerOnScreen();
-            //SceneManager.getInstance().getPrimaryStage().setMinWidth(670.0);;
-//            SceneManager.getInstance().getPrimaryStage().setMaxWidth(670.0);
+            
+            SceneManager.getInstance().getPrimaryStage().setResizable(false);
             SceneManager.getInstance().setPrimaryScene(cena);
         }
     }
