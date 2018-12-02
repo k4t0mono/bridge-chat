@@ -5,9 +5,11 @@
  */
 package bridgechat.controller;
 
+import bridgechat.util.SceneManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 
 /**
  * FXML Controller class
@@ -23,5 +25,10 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    
+    public void logar(){
+        Scene cena2 = SceneManager.getInstance().loadScene("ChatScene");
+        SceneManager.getInstance().setPrimaryScene(cena2);
+    }
     
 }

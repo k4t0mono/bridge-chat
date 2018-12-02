@@ -22,12 +22,12 @@ public class BridgeChat extends Application {
     public void start(Stage stage) throws Exception {
         new Node().start();
         
-        Scene cena = SceneManager.getInstance().loadScene("ChatScene");
+        Scene cena = SceneManager.getInstance().loadScene("LoginScene");
         
         if (cena != null) {
             SceneManager.getInstance().getPrimaryStage().centerOnScreen();
-            //SceneManager.getInstance().getPrimaryStage().setMinWidth(670.0);;
-//            SceneManager.getInstance().getPrimaryStage().setMaxWidth(670.0);
+            
+            SceneManager.getInstance().getPrimaryStage().setResizable(false);
             SceneManager.getInstance().setPrimaryScene(cena);
         }
     }
