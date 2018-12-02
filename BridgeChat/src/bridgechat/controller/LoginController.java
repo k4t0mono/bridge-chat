@@ -31,4 +31,5 @@ public class LoginController implements Initializable {
         SceneManager.getInstance().setPrimaryScene(cena2);
     }
     
+    
 }
