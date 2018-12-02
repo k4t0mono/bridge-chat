@@ -6,16 +6,21 @@ import bridgechat.dao.exception.InvalidMessageException;
 import bridgechat.backend.Node;
 import bridgechat.backend.chat.Chat;
 import bridgechat.backend.chat.Message;
+import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.controller.ChatSceneController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MessageDAO {
     
@@ -57,6 +62,19 @@ public class MessageDAO {
         if(histories.get(login) == null)
             histories.put(login, new ArrayList<>());
         
+        if(histories.get(login).isEmpty() || chats.get(login) == null) {
+            OnlineUser user = OnlineUserDAO.getInstance().getUser(login);
+            try {
+                Socket soc = new Socket(user.getIp(), user.getPort());
+                Chat c = new Chat(soc, userDAO.getUsername());
+                chats.put(login, c);
+                c.start();
+                System.out.println("novo chat com " + login + ": " + c);
+            } catch (IOException ex) {
+                Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         histories.get(login).add(msg);
         notifyOutSocket(msg, login);
     }
@@ -93,6 +111,8 @@ public class MessageDAO {
             System.out.println(key + " -> " + value);
         });
         
+        System.out.println(msg);
+        System.out.println(chats.get(login));
         PrintWriter out = chats.get(login).getOut();
         if(!out.checkError()) {
             out.println(GSON.toJson(msg));
