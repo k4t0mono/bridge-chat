@@ -25,27 +25,28 @@ public class BridgeChat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Username: ");
-        String username = scan.nextLine();
-        
-        int op = scan.nextInt();
-        
-        if(op == 1) {
-            String addr = "localhost";
-            
-            System.out.print("Nick: ");
-            scan.nextLine();
-            MessageDAO.getInstace().setChatUsername(scan.nextLine());
-
-            System.out.print("Port: ");
-            int port = scan.nextInt();
-
-            Socket s = new Socket(addr, port);
-            Chat cs = new Chat(s, username);
-            cs.start();
-        }
-        new Node(username).start();
+//        Scanner scan = new Scanner(System.in);
+//        System.out.print("Username: ");
+//        String username = scan.nextLine();
+//        
+//        int op = scan.nextInt();
+//        
+//        if(op == 1) {
+//            String addr = "localhost";
+//            
+//            System.out.print("Nick: ");
+//            scan.nextLine();
+//            MessageDAO.getInstace().setChatUsername(scan.nextLine());
+//
+//            System.out.print("Port: ");
+//            int port = scan.nextInt();
+//
+//            Socket s = new Socket(addr, port);
+//            Chat cs = new Chat(s, username);
+//            cs.start();
+//        }
+        Node node = new Node();
+        node.start();
         
         Scene cena = SceneManager.getInstance().loadScene("LoginScene");
 

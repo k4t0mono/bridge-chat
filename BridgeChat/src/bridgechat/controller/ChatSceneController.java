@@ -8,6 +8,7 @@ package bridgechat.controller;
 import bridgechat.backend.Node;
 import bridgechat.backend.chat.Message;
 import bridgechat.dao.MessageDAO;
+import bridgechat.dao.UserDAO;
 import bridgechat.util.SceneManager;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
@@ -28,19 +29,23 @@ public class ChatSceneController implements Initializable  {
     private JFXTextArea msgArea;
     @FXML
     private JFXTextArea txtArea;
-    private MessageDAO dao;
+    private MessageDAO messageDAO;
+    private UserDAO userDAO;
+
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         SceneManager.getInstance().getPrimaryStage().setResizable(true);
-        this.dao = MessageDAO.getInstace();
-        dao.setChatScene(this);
+        this.messageDAO = MessageDAO.getInstace();
+        this.userDAO = UserDAO.getInstance();
+        messageDAO.setChatScene(this);
     }    
     
     public void sendOnClick(){
         if (!msgArea.getText().isEmpty()){
-            dao.addSended(msgArea.getText());
-            insertTextArea(Node.getUsername() + ": " + msgArea.getText());
+            messageDAO.addSended(msgArea.getText());
+            insertTextArea(userDAO.getUsername() + ": " + msgArea.getText());
             msgArea.clear();
         }
     }

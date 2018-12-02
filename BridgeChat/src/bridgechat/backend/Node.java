@@ -35,15 +35,6 @@ public class Node extends Thread {
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
-    private static String username;
-
-    public Node(String username) {
-        Node.username = username;
-    }
-    
-    public static String getUsername() {
-        return username;
-    }
     
     @Override
     public void run() {

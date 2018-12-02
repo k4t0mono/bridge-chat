@@ -17,12 +17,15 @@ public class MessageDAO {
     private ChatSceneController chatScene;
     private PrintWriter outSocket;
     private String chatUsername;
+    private final UserDAO userDAO;
     
     private static MessageDAO instace = null;
     private static final Gson GSON = new GsonBuilder().create();
 
+    
     private MessageDAO() {
         this.history = new ArrayList<>();
+        this.userDAO = UserDAO.getInstance();
     }
     
     public static MessageDAO getInstace() {
@@ -38,7 +41,7 @@ public class MessageDAO {
     
     public void addSended(String s) {
         long timeStamp = Instant.now().getEpochSecond();
-        Message msg = new Message(Node.getUsername(), chatUsername, timeStamp, s);
+        Message msg = new Message(userDAO.getUsername(), chatUsername, timeStamp, s);
         history.add(msg);
         notifyOutSocket(msg);
     }
@@ -47,8 +50,8 @@ public class MessageDAO {
         if(msg == null || !msg.isValid())
             throw new InvalidMessageException("Recived invalid message");
         
-        if(!msg.getReciver().equals(Node.getUsername()))
-            throw new InvalidReciverException(msg.getReciver(), Node.getUsername());
+        if(!msg.getReciver().equals(userDAO.getUsername()))
+            throw new InvalidReciverException(msg.getReciver(), userDAO.getUsername());
         
         history.add(msg);
         notifyChatScene(msg);
