@@ -37,6 +37,10 @@ public class Node extends Thread {
     private static final Gson GSON = new GsonBuilder().create();
     private static String username;
 
+    public Node(String username) {
+        Node.username = username;
+    }
+    
     public static String getUsername() {
         return username;
     }
@@ -45,9 +49,9 @@ public class Node extends Thread {
     public void run() {
 //        setup_ssl();
 //        
-        Scanner scan = new Scanner(System.in);
-        System.out.print("username: ");
-        username = scan.nextLine();
+//        Scanner scan = new Scanner(System.in);
+//        System.out.print("username: ");
+//        username = scan.nextLine();
 //        
 //        OnlineUser[] onlines = {};
 //        try {

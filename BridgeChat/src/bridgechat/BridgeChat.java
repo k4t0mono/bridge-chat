@@ -6,11 +6,16 @@
 package bridgechat;
 
 import bridgechat.backend.Node;
+import bridgechat.backend.chat.Chat;
+import bridgechat.backend.chat.Message;
+import bridgechat.dao.MessageDAO;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import bridgechat.util.SceneManager;
+import java.net.Socket;
+import java.util.Scanner;
 
 /**
  *
@@ -20,10 +25,31 @@ public class BridgeChat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        new Node().start();
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Username: ");
+        String username = scan.nextLine();
+        
+        System.out.print("OP: ");
+        int op = scan.nextInt();
+        
+        if(op == 1) {
+            String addr = "localhost";
+            
+            System.out.print("Nick: ");
+            scan.nextLine();
+            MessageDAO.getInstace().setChatUsername(scan.nextLine());
+
+            System.out.print("Port: ");
+            int port = scan.nextInt();
+
+            Socket s = new Socket(addr, port);
+            Chat cs = new Chat(s, username);
+            cs.start();
+        }
+        new Node(username).start();
         
         Scene cena = SceneManager.getInstance().loadScene("ChatScene");
-        
+
         if (cena != null) {
             SceneManager.getInstance().getPrimaryStage().centerOnScreen();
             //SceneManager.getInstance().getPrimaryStage().setMinWidth(670.0);;
