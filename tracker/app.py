@@ -97,7 +97,7 @@ def broadcast():
     if op == 1:
         online[login] = (ip, port)
     elif op == 0:
-        online.remove(login)
+        online.pop(login)
 
     pprint(online)
     res = jsonify(success=True)
