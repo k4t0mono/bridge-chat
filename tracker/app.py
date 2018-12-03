@@ -116,11 +116,12 @@ def get_online():
 
     l = []
     for k in online:
-        l.append({
-            'login': k,
-            'ip': online[k][0],
-            'port': online[k][1],
-        })
+        if k != login:
+            l.append({
+                'login': k,
+                'ip': online[k][0],
+                'port': online[k][1],
+            })
 
     res = jsonify(l)
     return res
