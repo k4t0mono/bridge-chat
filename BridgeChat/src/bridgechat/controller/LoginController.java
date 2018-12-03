@@ -29,7 +29,12 @@ public class LoginController implements Initializable {
     @FXML
     public void logar(){
         dao.setUsername(txtLogin.getText());
-        dao.setTrackerAddr(txtTrackerAddr.getText());
+        
+        if(txtTrackerAddr.getText().isEmpty()) 
+            dao.setTrackerAddr("127.0.0.1");
+        else
+            dao.setTrackerAddr(txtTrackerAddr.getText());
+        
         bridgechat.BridgeChat.startNode();
                 
         Scene cena2 = SceneManager.getInstance().loadScene("ChatScene");

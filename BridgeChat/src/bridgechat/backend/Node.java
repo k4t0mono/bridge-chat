@@ -34,16 +34,20 @@ public class Node extends Thread {
 
     private static int PORT = 50123;
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    private static String TRACKER_ADDR = "https://192.168.0.101:5000";
+    private static String trackerAddr;
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
     private static boolean interrupted;
+
+    public static void setTrackerAddr(String ta) {
+        trackerAddr = "https://" + ta + ":5000";
+    }
     
     @Override
     public void run() {
         setup_ssl();
-
+        System.out.println(trackerAddr);
         try {
             register_user(UserDAO.getInstance().getUsername());
 //            broadcast_ip();
@@ -103,7 +107,7 @@ public class Node extends Thread {
     private static void register_user(String user) throws IOException {
         URL url = new URL(String.format(
                 "%s/user",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -137,7 +141,7 @@ public class Node extends Thread {
         
         URL url = new URL(String.format(
                 "%s/broadcast",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -159,7 +163,7 @@ public class Node extends Thread {
     public static OnlineUser[] getOnlines() throws IOException {
         URL url = new URL(String.format(
                 "%s/online",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("GET");

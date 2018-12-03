@@ -1,5 +1,7 @@
 package bridgechat.dao;
 
+import bridgechat.backend.Node;
+
 public class UserDAO {
     
     private static UserDAO instance = null;
@@ -30,6 +32,7 @@ public class UserDAO {
 
     public void setTrackerAddr(String trackerAddr) {
         this.trackerAddr = trackerAddr;
+        Node.setTrackerAddr(trackerAddr);
     }
     
 }
