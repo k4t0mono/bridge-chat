@@ -1,7 +1,10 @@
 package bridgechat.util;
 
+import bridgechat.backend.Node;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -41,14 +44,11 @@ public class SceneManager {
             @Override
             public void handle(WindowEvent event) {
                 bridgechat.BridgeChat.closeNode();
-//                boolean confirm = SceneManager.getInstance().alertMsg("Confirmação",
-//                                                      "Deseja fechar o BridgeChat?",
-//                                    "Clique em cancelar para continuar no sistema");
-//                if(confirm){
-//                    secondaryStage.close();
-//                } else {
-//                    event.consume();
-//                }
+                try {
+                    Node.broadcast_ip(0);
+                } catch (IOException ex) {
+                    Logger.getLogger(SceneManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }               
         });
         

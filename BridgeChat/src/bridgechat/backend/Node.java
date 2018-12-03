@@ -4,6 +4,7 @@ import bridgechat.backend.chat.Chat;
 import bridgechat.backend.tracker.BroadcastMessage;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.backend.tracker.Token;
+import bridgechat.backend.tracker.exception.SameUserException;
 import bridgechat.dao.MessageDAO;
 import bridgechat.dao.OnlineUserDAO;
 import bridgechat.dao.UserDAO;
@@ -46,17 +47,19 @@ public class Node extends Thread {
     
     @Override
     public void run() {
-        setup_ssl();
-        System.out.println(trackerAddr);
-        try {
-            register_user(UserDAO.getInstance().getUsername());
-//            broadcast_ip();
-            OnlineUserDAO.getInstance().setUsers(getOnlines());
-        } catch (java.net.ConnectException e) {
-            LOGGER.severe("Can't reach the tracker");
-        } catch (IOException ex) {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        setup_ssl();
+//        System.out.println(trackerAddr);
+//        try {
+//            register_user(UserDAO.getInstance().getUsername());
+////            broadcast_ip();
+//            OnlineUserDAO.getInstance().setUsers(getOnlines());
+//        } catch (java.net.ConnectException e) {
+//            LOGGER.severe("Can't reach the tracker");
+//            interrupt();
+//        } catch (IOException ex) {
+//            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+//            interrupt();
+//        }
         
         while(!interrupted) {
             try {
@@ -73,7 +76,7 @@ public class Node extends Thread {
         MessageDAO.getInstace().closeChats();
     }
     
-    private static void setup_ssl() {
+    public static void setup_ssl() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
@@ -104,7 +107,7 @@ public class Node extends Thread {
         HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -> true);
     }
     
-    private static void register_user(String user) throws IOException {
+    public static void register_user(String user) throws IOException, SameUserException {
         URL url = new URL(String.format(
                 "%s/user",
                 trackerAddr
@@ -113,14 +116,8 @@ public class Node extends Thread {
         con.setRequestMethod("POST");
         con.setRequestProperty("X-Auth-Login", user);
         
-        if(con.getResponseCode() == 401) {
-            LOGGER.log(
-                    Level.SEVERE,
-                    "The user `{0}` alredy exists on the tracker",
-                    user
-            );
-            return;
-        }
+        if(con.getResponseCode() == 401)
+            throw new SameUserException();
         
         BufferedReader br =  new BufferedReader(
                 new InputStreamReader(con.getInputStream())
@@ -133,6 +130,10 @@ public class Node extends Thread {
     }
     
     private static void broadcast_ip() throws IOException {
+        broadcast_ip(1);
+    }
+    
+    public static void broadcast_ip(int op) throws IOException {
         String ip;
         try(final DatagramSocket socket = new DatagramSocket()){
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
@@ -151,7 +152,7 @@ public class Node extends Thread {
         con.setDoInput(true); 
         
         
-        BroadcastMessage msg = new BroadcastMessage(ip, PORT, 1);
+        BroadcastMessage msg = new BroadcastMessage(ip, PORT, op);
         try (DataOutputStream output = new DataOutputStream(con.getOutputStream())) {
             output.writeBytes(GSON.toJson(msg));
         }

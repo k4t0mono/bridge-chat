@@ -98,6 +98,12 @@ def broadcast():
         online[login] = (ip, port)
     elif op == 0:
         online.pop(login)
+        index = 0
+        for i in range(len(users)):
+            if users[i].login == login:
+                index = i
+        
+        del users[index]
 
     pprint(online)
     res = jsonify(success=True)

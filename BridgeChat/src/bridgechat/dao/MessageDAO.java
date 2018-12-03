@@ -74,6 +74,14 @@ public class MessageDAO {
     }
     
     public void connectToUser() {
+        if(activeUser == null) {
+            SceneManager.getInstance().alertMsg(
+                    "Aviso", "Não há usuário selecionado", "",
+                    Alert.AlertType.INFORMATION
+            );
+            return;
+        }
+        
         if(chats.containsKey(activeUser)) {
             SceneManager.getInstance().alertMsg(
                     "Aviso", "Conexão existe", "Usuário já conectado",
