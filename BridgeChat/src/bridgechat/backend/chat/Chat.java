@@ -29,7 +29,7 @@ public class Chat extends Thread {
     
     @Override
     public void run() {
-        System.out.println("New ChatServer Started for " + this.socket.getInetAddress());
+        LOGGER.info("New ChatServer Started for " + this.socket.getInetAddress());
         
         try {
             out = new PrintWriter(this.socket.getOutputStream(), true);
@@ -42,11 +42,11 @@ public class Chat extends Thread {
             
             if(username != null) {
                 out.println(username);
-                System.out.println("Username sended");
+                LOGGER.info("Username sended");
             } else {
                 username = in.readLine();
                 dao.addUser(username);
-                System.out.println("Got username: " + username);
+                LOGGER.info("Got username: " + username);
             }
             dao.addChat(username, this);
             

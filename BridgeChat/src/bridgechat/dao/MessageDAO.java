@@ -8,6 +8,7 @@ import bridgechat.backend.chat.Chat;
 import bridgechat.backend.chat.Message;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.controller.ChatSceneController;
+import bridgechat.util.SceneManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -64,21 +65,32 @@ public class MessageDAO {
         if(histories.get(login) == null)
             histories.put(login, new ArrayList<>());
         
-        if(histories.get(login).isEmpty() || chats.get(login) == null) {
-            OnlineUser user = OnlineUserDAO.getInstance().getUser(login);
-            try {
-                Socket soc = new Socket(user.getIp(), user.getPort());
-                Chat c = new Chat(soc, userDAO.getUsername());
-                chats.put(login, c);
-                c.start();
-                LOGGER.info("Novo chat com " + login);
-            } catch (IOException ex) {
-                Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+//        if(histories.get(login).isEmpty() || chats.get(login) == null)
+//            connectToUser();
         
         histories.get(login).add(msg);
         notifyOutSocket(msg, login);
+    }
+    
+    public void connectToUser() {
+        if(chats.containsKey(activeUser)) {
+            SceneManager.getInstance().alertMsg(
+                    "Aviso", "Conexão existe", "Usuário já conectado"
+            );
+            return;
+        }
+        
+        LOGGER.info("connectToUser");
+        OnlineUser user = OnlineUserDAO.getInstance().getUser(activeUser);
+            try {
+                Socket soc = new Socket(user.getIp(), user.getPort());
+                Chat c = new Chat(soc, userDAO.getUsername());
+                chats.put(activeUser, c);
+                c.start();
+                LOGGER.info("Novo chat com " + activeUser);
+            } catch (IOException ex) {
+                Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
     public void addRecived(Message msg) throws DaoException {

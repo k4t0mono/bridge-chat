@@ -36,6 +36,11 @@ import javafx.scene.layout.AnchorPane;
 public class ChatSceneController implements Initializable  {
 
     int indexTxtArea = 0;
+    private MessageDAO messageDAO;
+    private UserDAO userDAO;
+    private OnlineUserDAO onlineUserDAO;
+    private String activeUser;
+    private static final Logger LOGGER = Logger.getLogger("CSC");
     
     @FXML
     private JFXTextArea msgArea;
@@ -60,11 +65,10 @@ public class ChatSceneController implements Initializable  {
     
     ObservableList<Person> dateTable;
     
-    private MessageDAO messageDAO;
-    private UserDAO userDAO;
-    private OnlineUserDAO onlineUserDAO;
-    private String activeUser;
-    private static final Logger LOGGER = Logger.getLogger("CSC");
+    @FXML
+    private JFXButton btnRefresh;
+    @FXML
+    private JFXButton btnConnect;
         
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -152,6 +156,16 @@ public class ChatSceneController implements Initializable  {
             addMessage(userDAO.getUsername(), msgArea.getText());
             msgArea.clear();
         }
+    }
+    
+    @FXML
+    private void refreshOnClick() {
+        System.out.println("refreshOnClick");
+    }
+    
+    @FXML
+    private void connectOnClick() {
+        messageDAO.connectToUser();
     }
     
     public static class Person{
