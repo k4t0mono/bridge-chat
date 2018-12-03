@@ -34,10 +34,11 @@ public class Node extends Thread {
 
     private static int PORT = 50123;
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    private static final String TRACKER_ADDR = "https://192.168.0.114:5000";
+    private static final String TRACKER_ADDR = "https://192.168.0.101:5000";
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
+    private static boolean interrupted;
     
     @Override
     public void run() {
@@ -45,7 +46,7 @@ public class Node extends Thread {
 
         try {
             register_user(UserDAO.getInstance().getUsername());
-            broadcast_ip();
+//            broadcast_ip();
             OnlineUserDAO.getInstance().setUsers(getOnlines());
         } catch (java.net.ConnectException e) {
             LOGGER.severe("Can't reach the tracker");
@@ -53,9 +54,9 @@ public class Node extends Thread {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        while (true) {
+        while(!interrupted) {
             try {
-                chat_server();
+                chat_server();   
             } catch (BindException e) {
                 LOGGER.log(Level.WARNING, "Port {0} alredy in use", PORT);
             } catch (IOException ex) {
@@ -174,13 +175,26 @@ public class Node extends Thread {
         ServerSocket ss;
         ss = new ServerSocket(PORT);
         LOGGER.log(Level.INFO, "Starting node at port {0}", PORT);
-//        broadcast_ip();
+        broadcast_ip();
         
-        while(true) {
+        while(!interrupted) {
             Chat cs;
             cs = new Chat(ss.accept());
             cs.start();
         }
     }
-    
+
+    public static int getPORT() {
+        return PORT;
+    }
+
+    @Override
+    public boolean isInterrupted() {
+        return interrupted;
+    }
+
+    @Override
+    public void interrupt() {
+        interrupted = true;
+    }
 }
