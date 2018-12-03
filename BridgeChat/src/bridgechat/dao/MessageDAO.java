@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
 
 public class MessageDAO {
     
@@ -75,7 +76,8 @@ public class MessageDAO {
     public void connectToUser() {
         if(chats.containsKey(activeUser)) {
             SceneManager.getInstance().alertMsg(
-                    "Aviso", "Conexão existe", "Usuário já conectado"
+                    "Aviso", "Conexão existe", "Usuário já conectado",
+                    Alert.AlertType.INFORMATION
             );
             return;
         }
@@ -142,7 +144,7 @@ public class MessageDAO {
     }
 
     public void addUser(String username) {
-        chatScene.adcTableValue(username, 0);
+        OnlineUserDAO.getInstance().refreshUsers();
     }
 
     public void closeChats() {

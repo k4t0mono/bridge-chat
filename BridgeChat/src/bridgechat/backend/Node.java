@@ -156,7 +156,7 @@ public class Node extends Thread {
         LOGGER.info("Broadcasted");
     }
     
-    private static OnlineUser[] getOnlines() throws IOException {
+    public static OnlineUser[] getOnlines() throws IOException {
         URL url = new URL(String.format(
                 "%s/online",
                 TRACKER_ADDR

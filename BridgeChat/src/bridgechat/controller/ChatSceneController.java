@@ -160,7 +160,7 @@ public class ChatSceneController implements Initializable  {
     
     @FXML
     private void refreshOnClick() {
-        System.out.println("refreshOnClick");
+        onlineUserDAO.refreshUsers();
     }
     
     @FXML

@@ -1,10 +1,14 @@
 package bridgechat.dao;
 
+import bridgechat.backend.Node;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.controller.ChatSceneController;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OnlineUserDAO {
     
@@ -63,6 +67,14 @@ public class OnlineUserDAO {
     
     public void notifyController() {
         csc.adcTableValue(getUsersLogin());
+    }
+    
+    public void refreshUsers() {
+        try {
+            setUsers(Node.getOnlines());
+        } catch (IOException ex) {
+            Logger.getLogger(OnlineUserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
