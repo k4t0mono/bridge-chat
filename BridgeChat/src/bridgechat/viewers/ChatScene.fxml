@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.paint.*?>
-<?import com.jfoenix.validation.*?>
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bridgechat.controller.ChatSceneController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bridgechat.controller.ChatSceneController">
     <stylesheets>
         <URL value="@chatScene.css" />
     </stylesheets>
@@ -48,11 +47,10 @@
                         </AnchorPane>
                      </bottom>
                      <center>
-                        <JFXTextArea fx:id="txtArea" editable="false" focusColor="#a6a6a600" focusTraversable="false" mouseTransparent="true" unFocusColor="#a19f9f15" wrapText="true" BorderPane.alignment="CENTER">
-                           <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                           </padding>
-                        </JFXTextArea>
+                        <JFXTextArea fx:id="txtArea" editable="false" focusColor="#ffffff00" focusTraversable="false" unFocusColor="#ffffff00" BorderPane.alignment="CENTER">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor></JFXTextArea>
                      </center>
                   </JFXToolbar>
                </children>

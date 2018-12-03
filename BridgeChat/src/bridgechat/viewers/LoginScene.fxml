@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.svg.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #faf9ff;" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="bridgechat.controller.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: #faf9ff;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bridgechat.controller.LoginController">
     <stylesheets>
         <URL value="@/bridgechat/viewers/loginScene.css" />
     </stylesheets>
    <children>
       <JFXTextField fx:id="txtLogin" focusColor="#2c51bffc" labelFloat="true" layoutX="50.0" layoutY="167.0" prefHeight="25.0" prefWidth="300.0" promptText="Login" unFocusColor="#4d4d4d9c" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
       <JFXButton fx:id="btnLogar" buttonType="RAISED" layoutX="100.0" layoutY="253.0" onMouseClicked="#logar" prefHeight="25.0" prefWidth="200.0" ripplerFill="#008eff" style="-fx-background-color: #0061ff; -fx-background-radius: 15;" text="Logar" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
-      <JFXTextField fx:id="txtPass" focusColor="#2c51bffc" labelFloat="true" layoutX="50.0" layoutY="209.0" prefHeight="25.0" prefWidth="300.0" promptText="Password" unFocusColor="#4d4d4d9c" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+      <JFXTextField fx:id="txtTrackerAddr" focusColor="#2c51bffc" labelFloat="true" layoutX="50.0" layoutY="209.0" prefHeight="25.0" prefWidth="300.0" promptText="Tracker address" unFocusColor="#4d4d4d9c" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
       <ImageView fitHeight="115.0" fitWidth="383.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="14.0">
          <image>
             <Image url="@../resources/bridgeChat.png" />

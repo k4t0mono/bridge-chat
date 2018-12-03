@@ -34,7 +34,7 @@ public class Node extends Thread {
 
     private static int PORT = 50123;
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    private static final String TRACKER_ADDR = "https://192.168.0.101:5000";
+    private static String TRACKER_ADDR = "https://192.168.0.101:5000";
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
