@@ -16,6 +16,8 @@ public class Chat extends Thread {
     private String username;
     private PrintWriter out;
 
+    private static final Logger LOGGER = Logger.getLogger("chat");
+    
     public Chat(Socket s, String username) {
         this.socket = s;
         this.username = username;
@@ -31,6 +33,7 @@ public class Chat extends Thread {
         
         try {
             out = new PrintWriter(this.socket.getOutputStream(), true);
+            LOGGER.info("out criado");
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(this.socket.getInputStream())
             );

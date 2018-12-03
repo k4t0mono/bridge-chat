@@ -33,6 +33,7 @@ public class MessageDAO {
     
     private static MessageDAO instace = null;
     private static final Gson GSON = new GsonBuilder().create();
+    private static final Logger LOGGER = Logger.getLogger(MessageDAO.class.getName());
 
     
     private MessageDAO() {
@@ -56,6 +57,7 @@ public class MessageDAO {
     }
     
     public void addSended(String login, String s) {
+        LOGGER.info("addSended(" + login + ", " + s +" )");
         long timeStamp = Instant.now().getEpochSecond();
         Message msg = new Message(userDAO.getUsername(), activeUser, timeStamp, s);
         
@@ -69,7 +71,7 @@ public class MessageDAO {
                 Chat c = new Chat(soc, userDAO.getUsername());
                 chats.put(login, c);
                 c.start();
-                System.out.println("novo chat com " + login + ": " + c);
+                LOGGER.info("Novo chat com " + login);
             } catch (IOException ex) {
                 Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -80,6 +82,7 @@ public class MessageDAO {
     }
     
     public void addRecived(Message msg) throws DaoException {
+        LOGGER.log(Level.INFO, "Message recived: {0}", msg);
         if(msg == null || !msg.isValid())
             throw new InvalidMessageException("Recived invalid message");
         
@@ -91,11 +94,15 @@ public class MessageDAO {
             histories.put(login, new ArrayList<>());
         
         histories.get(login).add(msg);
+        LOGGER.info("Adiconado a historia");
         
-        if(msg.getSender().equals(activeUser))
+        if(msg.getSender().equals(activeUser)) {
             notifyChatScene(msg);
-        else
+            LOGGER.info("csc notificado");
+        } else {
             chatScene.adcValueForUser(msg.getSender());
+            LOGGER.info("incrementado o valor");
+        }
     }
 
     public void setChatScene(ChatSceneController chatScene) {
@@ -107,12 +114,7 @@ public class MessageDAO {
     }
     
     public void notifyOutSocket(Message msg, String login) {
-        chats.forEach((String key, Chat value) -> {
-            System.out.println(key + " -> " + value);
-        });
-        
-        System.out.println(msg);
-        System.out.println(chats.get(login));
+//        LOGGER.info("notifyOutSocket(" + msg + ", " + login + "");
         PrintWriter out = chats.get(login).getOut();
         if(!out.checkError()) {
             out.println(GSON.toJson(msg));
@@ -129,6 +131,12 @@ public class MessageDAO {
 
     public void addUser(String username) {
         chatScene.adcTableValue(username, 0);
+    }
+
+    public void closeChats() {
+        chats.forEach((String s, Chat c) -> {
+            c.interrupt();
+        });
     }
     
 }

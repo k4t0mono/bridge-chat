@@ -65,6 +65,8 @@ public class Node extends Thread {
                 PORT++;
             }
         }
+        
+        MessageDAO.getInstace().closeChats();
     }
     
     private static void setup_ssl() {

@@ -32,7 +32,7 @@ public class SocketReader extends Thread {
                     Message msg = gson.fromJson(s, Message.class);
                     dao.addRecived(msg);
                 } catch (DaoException | JsonParseException ex) {
-//                    System.out.println("ex: " + ex.getMessage());
+                    System.out.println("ex: " + ex.getMessage());
                 }
                 
                 s = in.readLine();

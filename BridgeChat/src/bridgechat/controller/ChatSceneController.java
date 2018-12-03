@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -63,6 +64,7 @@ public class ChatSceneController implements Initializable  {
     private UserDAO userDAO;
     private OnlineUserDAO onlineUserDAO;
     private String activeUser;
+    private static final Logger LOGGER = Logger.getLogger("CSC");
         
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -145,6 +147,7 @@ public class ChatSceneController implements Initializable  {
     @FXML
     private void sendOnClick() {        
         if (!msgArea.getText().isEmpty()){
+            LOGGER.info("Menssage escrita");
             messageDAO.addSended(activeUser, msgArea.getText());
             addMessage(userDAO.getUsername(), msgArea.getText());
             msgArea.clear();
