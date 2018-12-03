@@ -62,7 +62,11 @@ public class MessageDAO {
         if(histories.get(login) == null)
             histories.put(login, new ArrayList<>());
         
-        if(histories.get(login).isEmpty() || chats.get(login) == null) {
+        histories.get(login).add(msg);
+        if(msg.getReciver().equals(userDAO.getUsername()))
+            return;
+        
+        if(histories.get(login).size() == 1 || chats.get(login) == null) {
             OnlineUser user = OnlineUserDAO.getInstance().getUser(login);
             try {
                 Socket soc = new Socket(user.getIp(), user.getPort());
@@ -74,9 +78,6 @@ public class MessageDAO {
                 Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        histories.get(login).add(msg);
-        notifyOutSocket(msg, login);
     }
     
     public void addRecived(Message msg) throws DaoException {
