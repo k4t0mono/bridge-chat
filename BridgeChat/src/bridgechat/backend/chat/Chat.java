@@ -13,8 +13,11 @@ import java.util.logging.Logger;
 public class Chat extends Thread {
     
     private final Socket socket;
-    private final String username;
+    private String username;
+    private PrintWriter out;
 
+    private static final Logger LOGGER = Logger.getLogger("chat");
+    
     public Chat(Socket s, String username) {
         this.socket = s;
         this.username = username;
@@ -26,25 +29,26 @@ public class Chat extends Thread {
     
     @Override
     public void run() {
-        System.out.println("New ChatServer Started for " + this.socket.getInetAddress());
+        LOGGER.info("New ChatServer Started for " + this.socket.getInetAddress());
         
         try {
-            PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+            out = new PrintWriter(this.socket.getOutputStream(), true);
+            LOGGER.info("out criado");
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(this.socket.getInputStream())
             );
             
             MessageDAO dao = MessageDAO.getInstace();
-            dao.setOutSocket(out);
             
             if(username != null) {
                 out.println(username);
-                System.out.println("Username sended");
+                LOGGER.info("Username sended");
             } else {
-                String s = in.readLine();
-                dao.setChatUsername(s);
-                System.out.println("Got username: " + s);
+                username = in.readLine();
+                dao.addUser(username);
+                LOGGER.info("Got username: " + username);
             }
+            dao.addChat(username, this);
             
             SocketReader sr = new SocketReader(in);
             sr.start();
@@ -58,6 +62,10 @@ public class Chat extends Thread {
         }
         
         Logger.getLogger(SocketReader.class.getName()).log(Level.FINER, "Chat ended");
+    }
+
+    public PrintWriter getOut() {
+        return out;
     }
     
 }

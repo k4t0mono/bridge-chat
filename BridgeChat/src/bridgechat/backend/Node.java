@@ -4,6 +4,10 @@ import bridgechat.backend.chat.Chat;
 import bridgechat.backend.tracker.BroadcastMessage;
 import bridgechat.backend.tracker.OnlineUser;
 import bridgechat.backend.tracker.Token;
+import bridgechat.backend.tracker.exception.SameUserException;
+import bridgechat.dao.MessageDAO;
+import bridgechat.dao.OnlineUserDAO;
+import bridgechat.dao.UserDAO;
 import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -31,35 +35,35 @@ public class Node extends Thread {
 
     private static int PORT = 50123;
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    private static final String TRACKER_ADDR = "https://127.0.0.1:5000";
+    private static String trackerAddr;
     private static String token;
     
     private static final Gson GSON = new GsonBuilder().create();
+    private static boolean interrupted;
+
+    public static void setTrackerAddr(String ta) {
+        trackerAddr = "https://" + ta + ":5000";
+    }
     
     @Override
     public void run() {
 //        setup_ssl();
-//        
-//        Scanner scan = new Scanner(System.in);
-//        System.out.print("username: ");
-//        username = scan.nextLine();
-//        
-//        OnlineUser[] onlines = {};
+//        System.out.println(trackerAddr);
 //        try {
-//            register_user(username);
-//            broadcast_ip();
-//            onlines = get_onlines();
+//            register_user(UserDAO.getInstance().getUsername());
+////            broadcast_ip();
+//            OnlineUserDAO.getInstance().setUsers(getOnlines());
 //        } catch (java.net.ConnectException e) {
 //            LOGGER.severe("Can't reach the tracker");
+//            interrupt();
 //        } catch (IOException ex) {
 //            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+//            interrupt();
 //        }
-//        
-//        System.out.println(Arrays.toString(onlines));
         
-        while (true) {
+        while(!interrupted) {
             try {
-                chat_server();
+                chat_server();   
             } catch (BindException e) {
                 LOGGER.log(Level.WARNING, "Port {0} alredy in use", PORT);
             } catch (IOException ex) {
@@ -68,9 +72,11 @@ public class Node extends Thread {
                 PORT++;
             }
         }
+        
+        MessageDAO.getInstace().closeChats();
     }
     
-    private static void setup_ssl() {
+    public static void setup_ssl() {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
@@ -101,23 +107,17 @@ public class Node extends Thread {
         HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -> true);
     }
     
-    private static void register_user(String user) throws IOException {
+    public static void register_user(String user) throws IOException, SameUserException {
         URL url = new URL(String.format(
                 "%s/user",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("X-Auth-Login", user);
         
-        if(con.getResponseCode() == 401) {
-            LOGGER.log(
-                    Level.SEVERE,
-                    "The user `{0}` alredy exists on the tracker",
-                    user
-            );
-            return;
-        }
+        if(con.getResponseCode() == 401)
+            throw new SameUserException();
         
         BufferedReader br =  new BufferedReader(
                 new InputStreamReader(con.getInputStream())
@@ -126,9 +126,14 @@ public class Node extends Thread {
         String s = br.lines().collect(Collectors.joining());
         
         token = GSON.fromJson(s, Token.class).getToken();
+        LOGGER.info("Registerd");
     }
     
     private static void broadcast_ip() throws IOException {
+        broadcast_ip(1);
+    }
+    
+    public static void broadcast_ip(int op) throws IOException {
         String ip;
         try(final DatagramSocket socket = new DatagramSocket()){
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
@@ -137,7 +142,7 @@ public class Node extends Thread {
         
         URL url = new URL(String.format(
                 "%s/broadcast",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -147,18 +152,19 @@ public class Node extends Thread {
         con.setDoInput(true); 
         
         
-        BroadcastMessage msg = new BroadcastMessage(ip, PORT, 1);
+        BroadcastMessage msg = new BroadcastMessage(ip, PORT, op);
         try (DataOutputStream output = new DataOutputStream(con.getOutputStream())) {
             output.writeBytes(GSON.toJson(msg));
         }
         
         System.out.println(con.getResponseCode());
+        LOGGER.info("Broadcasted");
     }
     
-    private static OnlineUser[] get_onlines() throws IOException {
+    public static OnlineUser[] getOnlines() throws IOException {
         URL url = new URL(String.format(
                 "%s/online",
-                TRACKER_ADDR
+                trackerAddr
         ));
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -176,13 +182,26 @@ public class Node extends Thread {
         ServerSocket ss;
         ss = new ServerSocket(PORT);
         LOGGER.log(Level.INFO, "Starting node at port {0}", PORT);
-//        broadcast_ip();
+        broadcast_ip();
         
-        while(true) {
+        while(!interrupted) {
             Chat cs;
             cs = new Chat(ss.accept());
             cs.start();
         }
     }
-    
+
+    public static int getPORT() {
+        return PORT;
+    }
+
+    @Override
+    public boolean isInterrupted() {
+        return interrupted;
+    }
+
+    @Override
+    public void interrupt() {
+        interrupted = true;
+    }
 }

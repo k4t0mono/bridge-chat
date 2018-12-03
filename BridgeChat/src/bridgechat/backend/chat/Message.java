@@ -38,5 +38,10 @@ public class Message {
     public String getText() {
         return text;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" + "sender=" + sender + ", reciver=" + reciver + ", time=" + time + ", text=" + text + '}';
+    }
     
 }

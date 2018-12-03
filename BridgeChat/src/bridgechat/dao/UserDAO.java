@@ -1,11 +1,13 @@
 package bridgechat.dao;
 
+import bridgechat.backend.Node;
+
 public class UserDAO {
     
     private static UserDAO instance = null;
     
     private String username;
-    private String password;
+    private String trackerAddr;
     
     private UserDAO() {}
 
@@ -24,12 +26,13 @@ public class UserDAO {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getTrackerAddr() {
+        return trackerAddr;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setTrackerAddr(String trackerAddr) {
+        this.trackerAddr = trackerAddr;
+        Node.setTrackerAddr(trackerAddr);
     }
     
 }

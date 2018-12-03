@@ -1,4 +1,4 @@
-package bridgechat.dao;
+package bridgechat.dao.exception;
 
 public class DaoException extends Exception {
 

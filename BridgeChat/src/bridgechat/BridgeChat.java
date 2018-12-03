@@ -1,55 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bridgechat;
 
 import bridgechat.backend.Node;
-import bridgechat.backend.chat.Chat;
-import bridgechat.backend.chat.Message;
-import bridgechat.dao.MessageDAO;
+import bridgechat.dao.UserDAO;
+import bridgechat.util.SceneManager;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import bridgechat.util.SceneManager;
-import java.net.Socket;
-import java.util.Scanner;
-
-/**
- *
- * @author Gabriel
- */
 public class BridgeChat extends Application {
+
+    private static Node node;
     
     @Override
     public void start(Stage stage) throws Exception {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.print("Username: ");
-//        String username = scan.nextLine();
-//        
-//        int op = scan.nextInt();
-//        
-//        if(op == 1) {
-//            String addr = "localhost";
-//            
-//            System.out.print("Nick: ");
-//            scan.nextLine();
-//            MessageDAO.getInstace().setChatUsername(scan.nextLine());
-//
-//            System.out.print("Port: ");
-//            int port = scan.nextInt();
-//
-//            Socket s = new Socket(addr, port);
-//            Chat cs = new Chat(s, username);
-//            cs.start();
-//        }
-        Node node = new Node();
-        node.start();
+        node = new Node();
         
         Scene cena = SceneManager.getInstance().loadScene("LoginScene");
-
         if (cena != null) {
             SceneManager.getInstance().getPrimaryStage().centerOnScreen();
             
@@ -58,9 +28,20 @@ public class BridgeChat extends Application {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
+    public static void startNode() {
+        node.start();
+    }
+    
+    public static void closeNode() {
+        node.interrupt();
+        try {
+            Socket s = new Socket("localhost", Node.getPORT());
+            s.close();
+        } catch (IOException ex) {
+            Logger.getLogger(BridgeChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
